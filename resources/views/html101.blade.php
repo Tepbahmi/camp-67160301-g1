@@ -1,14 +1,16 @@
 @extends('template.default')
 @section('title','Workshop FORM')
+@section('header','File Default')
 @section('content')
 <h1>Workshop #HTML - FORM</h1>
-<form>
+<form method="post" action="/" enctype="multipart/form-data">
+    @csrf
         <div class="row mt-3">
             <div class="col-sm-12 col-md-2">
                 <label for="fname">ชื่อ</lable>
             </div>
             <div class="col">
-                <input id="fname" class="from-control">
+                <input id="fname" name = "fname" class="from-control">
                 <div class="valid-feedback">
                     ถูกต้อง
                 </div>
@@ -23,12 +25,12 @@
                 <label for="lname">สกุล</lable>
             </div>
             <div class="col">
-                <input id="lname" class="from-control">
+                <input id="lname" name="lname" class="from-control">
                 <div class="valid-feedback">
-                 ถูกต้อง
+                    ถูกต้อง
                       </div>
                 <div class="invalid-feedback">
-                 โปรดระบุนามสกุล
+                    โปรดระบุนามสกุล
                 </div>
             </div>
 
@@ -37,7 +39,7 @@
                 <label for="birth">วัน/เดือน/ปีเกิด</label>
             </div>
             <div class="col">
-                <input type="date" id="birth" class="from-control">
+                <input type="date" id="birth" name="birth" class="from-control">
                 <div class="valid-feedback">
                     ถูกต้อง
                 </div>
@@ -51,7 +53,7 @@
                 <label for="age">อายุ</label>
             </div>
             <div class="col">
-                <input id="age" class="from-control">
+                <input id="age" name="age" class="from-control">
                 <div class="valid-feedback">
                     ถูกต้อง
                 </div>
@@ -66,11 +68,11 @@
             </div>
             <div class="col">
                 <div class="form-check form-check-inline">
-                    <input type="radio" id="male" name="gender" class="form-check-input">
+                    <input type="radio" id="male" name="gender" value="ชาย" class="form-check-input">
                     <label class="form-check-label" for="male">ชาย</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input type="radio" id="female" name="gender" class="form-check-input">
+                    <input type="radio" id="female" name="gender" value="หญิง" class="form-check-input">
                     <label class="form-check-label" for="female">หญิง</label>
                 </div>
                 <div class="invalid-feedback " id="genderError">
@@ -84,7 +86,7 @@
                 <label for="photo">รูป</label>
             </div>
             <div class="col">
-                <input type="file" id="photo" class="from-control">
+                <input type="file" id="photo" name="photo" class="from-control">
                 <div class="valid-feedback">
                     ถูกต้อง
                 </div>
@@ -98,7 +100,7 @@
                 <label for="address">ที่อยู่</label>
             </div>
             <div class="col">
-                <textarea id="address" class="from-control" rows="3"></textarea>
+                <textarea id="address" name="address" class="from-control" rows="3"></textarea>
                 <div class="valid-feedback">
                     ถูกต้อง
                 </div>
@@ -112,7 +114,7 @@
                 <label for="color">สีที่ชอบ</label>
             </div>
             <div class="col">
-                <select id="color" class="from-control" style="width:130px;">
+                <select id="color" name="color" class="from-control" style="width:130px;">
                      <option value="">-- เลือกสี --</option>
                     <option>สีแดง</option>
                     <option>สีน้ำเงิน</option>
@@ -133,15 +135,15 @@
             </div>
             <div class="col">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="m1" name="music">
+                    <input class="form-check-input" type="radio" id="m1" name="music" value="เพื่อชีวิต">
                     <label class="form-check-label" for="m1">เพื่อชีวิต</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="m2" name="music">
+                    <input class="form-check-input" type="radio" id="m2" name="music" value="ลูกทุ่ง">
                     <label class="form-check-label" for="m2">ลูกทุ่ง</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="m3" name="music">
+                    <input class="form-check-input" type="radio" id="m3" name="music" value="อื่นๆ">
                     <label class="form-check-label" for="m3">อื่นๆ</label>
                 </div>
                 <div class="invalid-feedback " id="musicError">
@@ -178,16 +180,16 @@
              @push('scripts')
              <script>
                 let cilckMe = function (){
+                    let isValid = true
                     let checkField = (id) =>{
                         let el = document.getElementById(id)
                         if(el.value.trim() == ""){
                             el.classList.remove('is-valid')
                             el.classList.add('is-invalid')
-                            return false
+                            isValid = false
                         }else{
                             el.classList.remove('is-invalid')
                             el.classList.add('is-valid')
-                            return true
                         }
                     }
                       checkField('fname')
@@ -200,20 +202,29 @@
                let photo = document.getElementById('photo')
                 if(photo.files.length === 0){
                     photo.classList.add('is-invalid')
+                    isValid = false
                 }else{
                     photo.classList.remove('is-invalid')
                     photo.classList.add('is-valid')
                 }
 
+
                 let gender = document.querySelector('input[name="gender"]:checked')
                 document.getElementById('genderError').style.display = gender ? 'none' : 'block'
+                if(!gender) isValid = false
 
                 let music = document.querySelector('input[name="music"]:checked')
                 document.getElementById('musicError').style.display = music ? 'none' : 'block'
+                if(!music) isValid = false
 
                 let agree = document.getElementById('agree')
                 document.getElementById('agreeError').style.display = agree.checked ? 'none' : 'block'
-            }
+                 if(!agree.checked) isValid = false
+
+                 if(isValid){
+                     document.querySelector('form').submit()
+                 }
+                }
 
                 let submitted = false
                 function resetForm(){
