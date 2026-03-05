@@ -60,7 +60,7 @@ class FlightController extends Controller
 
         return view('flights.update', $data);
     }
-
+    
     /**
      * Update the specified resource in storage.
      */

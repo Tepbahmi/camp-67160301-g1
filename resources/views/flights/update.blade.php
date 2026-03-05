@@ -17,3 +17,5 @@
     </form>
     @include('flights.table')
 @endsection
+
+ 
